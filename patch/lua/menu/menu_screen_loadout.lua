@@ -18,44 +18,44 @@ function MenuScreenLoadout.init(arg_1_0, ...)
 	arg_1_0.name = "menu_screen_loadout"
 end
 
-function MenuScreenLoadout.on_enter(arg_1_0, arg_1_1)
-	arg_1_0.current_user_pad_number = GameSettings.get_main_pad_number()
-	arg_1_0.specified_loadout = arg_1_1 and arg_1_1.specified_loadout
-	arg_1_0.specified_description = arg_1_1 and arg_1_1.specified_description
-	arg_1_0.mission_seed = arg_1_1 and arg_1_1.mission_seed or arg_1_0.parent:get_mission_seed()
-	arg_1_0.shown_random_loadout_hint = false
-	arg_1_0.is_proving_ground_trial = false
-	arg_1_0.provinggrounds_seed = arg_1_1 and arg_1_1.provinggrounds_seed or arg_1_0.parent.get_provinggrounds_seed and arg_1_0.parent:get_provinggrounds_seed()
+function MenuScreenLoadout.on_enter(menu_instance, arg_1_1)
+	menu_instance.current_user_pad_number = GameSettings.get_main_pad_number()
+	menu_instance.specified_loadout = arg_1_1 and arg_1_1.specified_loadout
+	menu_instance.specified_description = arg_1_1 and arg_1_1.specified_description
+	menu_instance.mission_seed = arg_1_1 and arg_1_1.mission_seed or menu_instance.parent:get_mission_seed()
+	menu_instance.shown_random_loadout_hint = false
+	menu_instance.is_proving_ground_trial = false
+	menu_instance.provinggrounds_seed = arg_1_1 and arg_1_1.provinggrounds_seed or menu_instance.parent.get_provinggrounds_seed and menu_instance.parent:get_provinggrounds_seed()
 
-	if arg_1_0.provinggrounds_seed then
-		arg_1_0.is_proving_ground_trial = true
+	if menu_instance.provinggrounds_seed then
+		menu_instance.is_proving_ground_trial = true
 
-		local var_1_0 = ProvinggroundsSettings.get_provinggrounds_params_flat(arg_1_0.provinggrounds_seed)
+		local var_1_0 = ProvinggroundsSettings.get_provinggrounds_params_flat(menu_instance.provinggrounds_seed)
 
-		arg_1_0.proving_grounds_loadout = ProvinggroundsConditions.construct_loadout(table.clone(LoadoutSettings.default_loadout), var_1_0.sub_condition, arg_1_0.provinggrounds_seed, var_1_0)
+		menu_instance.proving_grounds_loadout = ProvinggroundsConditions.construct_loadout(table.clone(LoadoutSettings.default_loadout), var_1_0.sub_condition, menu_instance.provinggrounds_seed, var_1_0)
 	end
 
-	arg_1_0.network_session_handler = arg_1_0.parent.network_session_handler
-	arg_1_0.perk_icon_size = {
+	menu_instance.network_session_handler = menu_instance.parent.network_session_handler
+	menu_instance.perk_icon_size = {
 		232,
 		60,
 	}
-	arg_1_0.primary_weapon_icon_size = {
+	menu_instance.primary_weapon_icon_size = {
 		128,
 		56,
 	}
-	arg_1_0.stratagem_icon_size = {
+	menu_instance.stratagem_icon_size = {
 		50,
 		50,
 	}
-	arg_1_0.upgrade_icon_size = {
+	menu_instance.upgrade_icon_size = {
 		21,
 		21,
 	}
-	arg_1_0.option_menus = {}
+	menu_instance.option_menus = {}
 
-	for iter_1_0 = 1, 4 do
-		arg_1_0:setup_loadout(iter_1_0)
+	for player_id = 1, 4 do
+		menu_instance:setup_loadout(player_id)
 	end
 
 	local var_1_1 = {
@@ -99,44 +99,44 @@ function MenuScreenLoadout.on_enter(arg_1_0, arg_1_1)
 		body_large = FontSettings.fonts.body_large,
 	}
 
-	arg_1_0.hd_gui = {}
-	arg_1_0.hd_gui_scroll = {}
-	arg_1_0.hd_gui_horizontal_scroll = {}
+	menu_instance.hd_gui = {}
+	menu_instance.hd_gui_scroll = {}
+	menu_instance.hd_gui_horizontal_scroll = {}
 
 	for iter_1_9 = 1, 4 do
-		local var_1_5 = arg_1_0.parent.world_proxy:get_name()
+		local var_1_5 = menu_instance.parent.world_proxy:get_name()
 
-		arg_1_0.hd_gui[iter_1_9] = HdGui(var_1_5, "loadout_ui" .. tostring(iter_1_9), {
+		menu_instance.hd_gui[iter_1_9] = HdGui(var_1_5, "loadout_ui" .. tostring(iter_1_9), {
 			"menu/menu",
 			"hud/hud",
 			"fonts/fonts",
 		})
 
-		arg_1_0.hd_gui[iter_1_9]:add_fonts(var_1_2)
-		arg_1_0.hd_gui[iter_1_9]:set_clippable_materials(var_1_1)
+		menu_instance.hd_gui[iter_1_9]:add_fonts(var_1_2)
+		menu_instance.hd_gui[iter_1_9]:set_clippable_materials(var_1_1)
 
-		arg_1_0.hd_gui_scroll[iter_1_9] = HdGui(var_1_5, "loadout_ui_scroll" .. tostring(iter_1_9), {
+		menu_instance.hd_gui_scroll[iter_1_9] = HdGui(var_1_5, "loadout_ui_scroll" .. tostring(iter_1_9), {
 			"menu/menu",
 			"hud/hud",
 			"fonts/fonts",
 		})
 
-		arg_1_0.hd_gui_scroll[iter_1_9]:add_fonts(var_1_4)
-		arg_1_0.hd_gui_scroll[iter_1_9]:set_clippable_materials(var_1_3)
+		menu_instance.hd_gui_scroll[iter_1_9]:add_fonts(var_1_4)
+		menu_instance.hd_gui_scroll[iter_1_9]:set_clippable_materials(var_1_3)
 
-		arg_1_0.hd_gui_horizontal_scroll[iter_1_9] = HdGui(var_1_5, "loadout_ui_vertical_scroll" .. tostring(iter_1_9), {
+		menu_instance.hd_gui_horizontal_scroll[iter_1_9] = HdGui(var_1_5, "loadout_ui_vertical_scroll" .. tostring(iter_1_9), {
 			"menu/menu",
 			"hud/hud",
 			"fonts/fonts",
 		})
 
-		arg_1_0.hd_gui_horizontal_scroll[iter_1_9]:add_fonts(var_1_4)
-		arg_1_0.hd_gui_horizontal_scroll[iter_1_9]:set_clippable_materials(var_1_3)
+		menu_instance.hd_gui_horizontal_scroll[iter_1_9]:add_fonts(var_1_4)
+		menu_instance.hd_gui_horizontal_scroll[iter_1_9]:set_clippable_materials(var_1_3)
 	end
 
-	arg_1_0.prevent_hotjoin = false
+	menu_instance.prevent_hotjoin = false
 
-	local var_1_6 = arg_1_0.parent.world_proxy:viewport("menu_viewport")
+	local var_1_6 = menu_instance.parent.world_proxy:viewport("menu_viewport")
 
 	var_1_6:set_shading_environment_variable("dof_near_setting", "vector2", {
 		0,
@@ -148,38 +148,38 @@ function MenuScreenLoadout.on_enter(arg_1_0, arg_1_1)
 	})
 end
 
-function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
-	local var_1_0
-	local var_1_1
-	local var_1_2
-	local var_1_3
-	local var_1_4 = false
+function MenuScreenLoadout.setup_loadout(menu_instance, player_id)
+	local item_unlocks
+	local new_unlocks
+	local entitlements
+	local item_upgrades
+	local is_owned = false
 
-	if arg_1_0.parent.players[arg_1_1].player_go:owned() then
-		local var_1_5 = arg_1_0.parent.players[arg_1_1].pad_number
-		local var_1_6 = UserManager:get_user_id(var_1_5)
+	if menu_instance.parent.players[player_id].player_go:owned() then
+		local pad_number = menu_instance.parent.players[player_id].pad_number
+		local user_id = UserManager:get_user_id(pad_number)
 
-		var_1_0 = SaveManager:user_get("item_unlocks", var_1_6) or {}
-		var_1_1 = SaveManager:user_get("new_unlocks", var_1_6) or {}
-		var_1_3 = SaveManager:user_get("item_upgrades", var_1_6) or {}
-		var_1_2 = DlcSettings.get_combined_entitlements(var_1_6)
-		var_1_4 = true
+		item_unlocks = SaveManager:user_get("item_unlocks", user_id) or {}
+		new_unlocks = SaveManager:user_get("new_unlocks", user_id) or {}
+		item_upgrades = SaveManager:user_get("item_upgrades", user_id) or {}
+		entitlements = DlcSettings.get_combined_entitlements(user_id)
+		is_owned = true
 	else
-		var_1_0 = {}
-		var_1_1 = {}
-		var_1_2 = {}
-		var_1_3 = {}
+		item_unlocks = {}
+		new_unlocks = {}
+		entitlements = {}
+		item_upgrades = {}
 	end
 
-	local var_1_7
+	local player_xp
 
-	if arg_1_0.parent.players[arg_1_1].player_go:exists() then
-		var_1_7 = arg_1_0.parent.players[arg_1_1].player_go:get("xp")
+	if menu_instance.parent.players[player_id].player_go:exists() then
+		player_xp = menu_instance.parent.players[player_id].player_go:get("xp")
 	else
-		var_1_7 = 0
+		player_xp = 0
 	end
 
-	local var_1_8 = {
+	local loadout_menu = {
 		available_items = {
 			perks = {
 				groups = {},
@@ -191,31 +191,31 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 				groups = {},
 			},
 		},
-		new_unlocks = var_1_1,
-		item_upgrades = var_1_3,
-		is_owned = var_1_4,
+		new_unlocks = new_unlocks,
+		item_upgrades = item_upgrades,
+		is_owned = is_owned,
 	}
 
-	var_1_8.loadout_hover_index_cursor = nil
-	var_1_8.loadout_hover_index = 1
-	var_1_8.last_current_selection_index = 1
+	loadout_menu.loadout_hover_index_cursor = nil
+	loadout_menu.loadout_hover_index = 1
+	loadout_menu.last_current_selection_index = 1
 
-	for iter_1_0, iter_1_1 in ipairs(LoadoutSettings.perks) do
-		local var_1_9 = false
+	for perk_idx, perk in ipairs(LoadoutSettings.perks) do
+		local can_use_perk = false
 
-		if arg_1_0.specified_loadout then
-			for iter_1_2, iter_1_3 in ipairs(arg_1_0.specified_loadout.perks) do
-				if iter_1_3 == iter_1_1.name then
-					var_1_9 = true
+		if menu_instance.specified_loadout then
+			for specified_perk_idx, specified_perk in ipairs(menu_instance.specified_loadout.perks) do
+				if specified_perk == perk.name then
+					can_use_perk = true
 				end
 			end
 		else
-			var_1_9 = ProgressionSettings.can_use(iter_1_1.name, "perks", var_1_7) or DlcSettings.can_use(iter_1_1.name, var_1_2)
+			can_use_perk = ProgressionSettings.can_use(perk.name, "perks", player_xp) or DlcSettings.can_use(perk.name, entitlements)
 
-			if not var_1_9 then
-				for iter_1_4, iter_1_5 in ipairs(var_1_0) do
-					if iter_1_1.name == iter_1_5 then
-						var_1_9 = true
+			if not can_use_perk then
+				for unlock_idx, unlock in ipairs(item_unlocks) do
+					if perk.name == unlock then
+						can_use_perk = true
 
 						break
 					end
@@ -223,53 +223,54 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 			end
 		end
 
-		if var_1_9 then
-			local var_1_10 = var_1_8.available_items.perks.groups
-			local var_1_11 = iter_1_1.group or iter_1_1.name
-			local var_1_12 = false
+		if can_use_perk then
+			local perk_groups = loadout_menu.available_items.perks.groups
+			local perk_group_or_name = perk.group or perk.name
+			local has_group = false
 
-			for iter_1_6, iter_1_7 in ipairs(var_1_10) do
-				if iter_1_7.name == var_1_11 then
-					iter_1_7.items[#iter_1_7.items + 1] = iter_1_1
-					var_1_12 = true
+			for perk_group_idx, perk_group in ipairs(perk_groups) do
+				if perk_group.name == perk_group_or_name then
+					perk_group.items[#perk_group.items + 1] = perk
+					has_group = true
 
 					break
 				end
 			end
 
-			if not var_1_12 then
-				local var_1_13 = {
+			if not has_group then
+				local perk_group_item = {
 					item_index = 1,
-					name = var_1_11,
+					name = perk_group_or_name,
 					items = {
-						iter_1_1,
+						perk,
 					},
 				}
 
-				var_1_10[#var_1_10 + 1] = var_1_13
+				perk_groups[#perk_groups + 1] = perk_group_item
 			end
 		end
 	end
 
-	for iter_1_8, iter_1_9 in ipairs(LoadoutSettings.primary_weapon) do
-		if iter_1_9.group ~= "melee" and iter_1_9.group ~= "support" then
-			local var_1_14 = var_1_3[iter_1_9.name] or 0
-			local var_1_15 = LoadoutSettings.get_upgraded_primary_weapon(iter_1_8, var_1_14)
-			local var_1_16 = false
+	for primary_weapon_idx, loadout_primary_weapon in ipairs(LoadoutSettings.primary_weapon) do
+		if loadout_primary_weapon.group ~= "support" then -- patch
+		-- if loadout_primary_weapon.group ~= "melee" and loadout_primary_weapon.group ~= "support" then
+			local primary_upgrade = item_upgrades[loadout_primary_weapon.name] or 0
+			local primary_weapon = LoadoutSettings.get_upgraded_primary_weapon(primary_weapon_idx, primary_upgrade)
+			local can_use_primary_weapon = false
 
-			if arg_1_0.specified_loadout then
-				for iter_1_10, iter_1_11 in ipairs(arg_1_0.specified_loadout.primary_weapon) do
-					if iter_1_11 == var_1_15.name then
-						var_1_16 = true
+			if menu_instance.specified_loadout then
+				for specified_loadout_primary_weapon_idx, specified_loadout_primary_weapon in ipairs(menu_instance.specified_loadout.primary_weapon) do
+					if specified_loadout_primary_weapon == primary_weapon.name then
+						can_use_primary_weapon = true
 					end
 				end
 			else
-				var_1_16 = ProgressionSettings.can_use(var_1_15.name, "primary_weapon", var_1_7) or DlcSettings.can_use(var_1_15.name, var_1_2)
+				can_use_primary_weapon = ProgressionSettings.can_use(primary_weapon.name, "primary_weapon", player_xp) or DlcSettings.can_use(primary_weapon.name, entitlements)
 
-				if not var_1_16 then
-					for iter_1_12, iter_1_13 in ipairs(var_1_0) do
-						if var_1_15.name == iter_1_13 then
-							var_1_16 = true
+				if not can_use_primary_weapon then
+					for primary_unlock_idx, primary_unlock in ipairs(item_unlocks) do
+						if primary_weapon.name == primary_unlock then
+							can_use_primary_weapon = true
 
 							break
 						end
@@ -277,55 +278,57 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 				end
 			end
 
-			if var_1_16 then
-				local var_1_17 = var_1_8.available_items.primary_weapon.groups
-				local var_1_18 = var_1_15.group or var_1_15.name
-				local var_1_19 = false
+			-- this patch enables melee weapons (saber) in loadouts
+			if can_use_primary_weapon or loadout_primary_weapon.group == "melee" then -- patch
+				-- if can_use_primary_weapon then
+				local primary_groups = loadout_menu.available_items.primary_weapon.groups
+				local primary_group_or_name = primary_weapon.group or primary_weapon.name
+				local has_group = false
 
-				for iter_1_14, iter_1_15 in ipairs(var_1_17) do
-					if iter_1_15.name == var_1_18 then
-						iter_1_15.items[#iter_1_15.items + 1] = var_1_15
-						var_1_19 = true
+				for primary_group_idx, primary_group in ipairs(primary_groups) do
+					if primary_group.name == primary_group_or_name then
+						primary_group.items[#primary_group.items + 1] = primary_weapon
+						has_group = true
 
 						break
 					end
 				end
 
-				if not var_1_19 then
-					local var_1_20 = {
+				if not has_group then
+					local primary_group_item = {
 						item_index = 1,
-						name = var_1_18,
+						name = primary_group_or_name,
 						items = {
-							var_1_15,
+							primary_weapon,
 						},
 					}
 
-					var_1_17[#var_1_17 + 1] = var_1_20
+					primary_groups[#primary_groups + 1] = primary_group_item
 				end
 			end
 		end
 	end
 
-	for iter_1_16, iter_1_17 in ipairs(LoadoutSettings.stratagems) do
-		local var_1_21 = var_1_3[iter_1_17.name] or 0
-		local var_1_22 = LoadoutSettings.get_upgraded_stratagem(iter_1_16, var_1_21)
+	for loadout_stratagem_idx, loadout_stratagem in ipairs(LoadoutSettings.stratagems) do
+		local stratagem_upgrade = item_upgrades[loadout_stratagem.name] or 0
+		local stratagem = LoadoutSettings.get_upgraded_stratagem(loadout_stratagem_idx, stratagem_upgrade)
 
-		if not array.find(LoadoutSettings.static_stratagems, var_1_22.name) then
-			local var_1_23 = false
+		if not array.find(LoadoutSettings.static_stratagems, stratagem.name) then
+			local can_use_stratagem = false
 
-			if arg_1_0.specified_loadout then
-				for iter_1_18, iter_1_19 in ipairs(arg_1_0.specified_loadout.stratagems) do
-					if iter_1_19 == var_1_22.name then
-						var_1_23 = true
+			if menu_instance.specified_loadout then
+				for specified_stratagem_idx, specified_stratagem in ipairs(menu_instance.specified_loadout.stratagems) do
+					if specified_stratagem == stratagem.name then
+						can_use_stratagem = true
 					end
 				end
 			else
-				var_1_23 = ProgressionSettings.can_use(var_1_22.name, "stratagems", var_1_7) or DlcSettings.can_use(var_1_22.name, var_1_2)
+				can_use_stratagem = ProgressionSettings.can_use(stratagem.name, "stratagems", player_xp) or DlcSettings.can_use(stratagem.name, entitlements)
 
-				if not var_1_23 then
-					for iter_1_20, iter_1_21 in ipairs(var_1_0) do
-						if var_1_22.name == iter_1_21 then
-							var_1_23 = true
+				if not can_use_stratagem then
+					for stratagem_unlock_idx, stratagem_unlock in ipairs(item_unlocks) do
+						if stratagem.name == stratagem_unlock then
+							can_use_stratagem = true
 
 							break
 						end
@@ -333,93 +336,93 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 				end
 			end
 
-			if var_1_23 then
-				local var_1_24 = var_1_8.available_items.stratagems.groups
-				local var_1_25 = var_1_22.group or var_1_22.name
-				local var_1_26 = false
+			if can_use_stratagem then
+				local stratagem_groups = loadout_menu.available_items.stratagems.groups
+				local stratagem_group_or_name = stratagem.group or stratagem.name
+				local has_group = false
 
-				for iter_1_22, iter_1_23 in ipairs(var_1_24) do
-					if iter_1_23.name == var_1_25 then
-						iter_1_23.items[#iter_1_23.items + 1] = var_1_22
-						var_1_26 = true
+				for stratagem_group_idx, stratagem_group in ipairs(stratagem_groups) do
+					if stratagem_group.name == stratagem_group_or_name then
+						stratagem_group.items[#stratagem_group.items + 1] = stratagem
+						has_group = true
 
 						break
 					end
 				end
 
-				if not var_1_26 then
-					local var_1_27 = {
+				if not has_group then
+					local stratagem_group_item = {
 						item_index = 1,
-						name = var_1_25,
+						name = stratagem_group_or_name,
 						items = {
-							var_1_22,
+							stratagem,
 						},
 					}
 
-					var_1_24[#var_1_24 + 1] = var_1_27
+					stratagem_groups[#stratagem_groups + 1] = stratagem_group_item
 				end
 			end
 		end
 	end
 
-	local var_1_28
-	local var_1_29
+	local loadout
+	local loadouts
 
-	if arg_1_0.parent.players[arg_1_1].player_go:owned() then
-		arg_1_0.parent.players[arg_1_1].player_go:set("loadout_done", false)
+	if menu_instance.parent.players[player_id].player_go:owned() then
+		menu_instance.parent.players[player_id].player_go:set("loadout_done", false)
 
-		local var_1_30 = arg_1_0.parent.players[arg_1_1].pad_number
-		local var_1_31 = UserManager:get_user_id(var_1_30)
+		local pad_number = menu_instance.parent.players[player_id].pad_number
+		local user_id = UserManager:get_user_id(pad_number)
 
-		if IS_PS4 or var_1_30 == GameSettings.get_main_pad_number() then
-			var_1_29 = SaveManager:user_get("loadouts", var_1_31)
-			var_1_28 = SaveManager:user_get("loadout", var_1_31)
+		if IS_PS4 or pad_number == GameSettings.get_main_pad_number() then
+			loadouts = SaveManager:user_get("loadouts", user_id)
+			loadout = SaveManager:user_get("loadout", user_id)
 		else
-			var_1_28 = SaveManager:get("loadout_" .. tostring(var_1_30))
-			var_1_29 = SaveManager:get("loadouts_" .. tostring(var_1_30))
+			loadout = SaveManager:get("loadout_" .. tostring(pad_number))
+			loadouts = SaveManager:get("loadouts_" .. tostring(pad_number))
 		end
 
-		if var_1_29 == nil or #var_1_29 == 0 then
-			var_1_29 = table.clone(LoadoutSettings.default_loadouts)
+		if loadouts == nil or #loadouts == 0 then
+			loadouts = table.clone(LoadoutSettings.default_loadouts)
 
-			if var_1_28 then
-				var_1_29[1] = table.clone(var_1_28)
-				var_1_29[2] = table.clone(var_1_28)
-				var_1_29[3] = table.clone(var_1_28)
+			if loadout then
+				loadouts[1] = table.clone(loadout)
+				loadouts[2] = table.clone(loadout)
+				loadouts[3] = table.clone(loadout)
 			end
 		end
 
-		var_1_28 = table.clone(var_1_29[1])
+		loadout = table.clone(loadouts[1])
 
-		for iter_1_24, iter_1_25 in ipairs(var_1_29) do
-			iter_1_25 = Boot.ensure_loadout(var_1_31, iter_1_25 or table.clone(LoadoutSettings.default_loadout))
-			iter_1_25.sidearm_weapon = LoadoutSettings.default_loadout.sidearm_weapon
+		for user_loadout_idx, user_loadout in ipairs(loadouts) do
+			user_loadout = Boot.ensure_loadout(user_id, user_loadout or table.clone(LoadoutSettings.default_loadout))
+			user_loadout.sidearm_weapon = LoadoutSettings.default_loadout.sidearm_weapon
 		end
 	else
-		var_1_29 = table.clone(LoadoutSettings.default_loadouts)
-		var_1_28 = table.clone(var_1_29[1])
+		loadouts = table.clone(LoadoutSettings.default_loadouts)
+		loadout = table.clone(loadouts[1])
 	end
 
-	var_1_8.loadouts = var_1_29
-	var_1_8.loadout_index = 1
+	loadout_menu.loadouts = loadouts
+	loadout_menu.loadout_index = 1
 
-	if arg_1_0.specified_loadout then
-		var_1_28.perk = arg_1_0.specified_loadout.perks[1]
-		var_1_28.primary_weapon = arg_1_0.specified_loadout.primary_weapon[1]
+	if menu_instance.specified_loadout then
+		loadout.perk = menu_instance.specified_loadout.perks[1]
+		loadout.primary_weapon = menu_instance.specified_loadout.primary_weapon[1]
 
 		local var_1_32 = 0
 
 		for iter_1_26 = #LoadoutSettings.static_stratagems + 1, LoadoutSettings.nr_of_stratagem_slots do
-			local var_1_33 = var_1_32 % #arg_1_0.specified_loadout.stratagems + 1
+			local var_1_33 = var_1_32 % #menu_instance.specified_loadout.stratagems + 1
 
-			var_1_28.stratagems[iter_1_26] = arg_1_0.specified_loadout.stratagems[var_1_33]
+			loadout.stratagems[iter_1_26] = menu_instance.specified_loadout.stratagems[var_1_33]
 			var_1_32 = var_1_32 + 1
 		end
 	else
-		for iter_1_27, iter_1_28 in ipairs(var_1_29) do
+		for iter_1_27, iter_1_28 in ipairs(loadouts) do
 			local var_1_34 = false
 
-			for iter_1_29, iter_1_30 in ipairs(var_1_8.available_items.primary_weapon.groups) do
+			for iter_1_29, iter_1_30 in ipairs(loadout_menu.available_items.primary_weapon.groups) do
 				for iter_1_31, iter_1_32 in ipairs(iter_1_30.items) do
 					if iter_1_28.primary_weapon == iter_1_32.name then
 						var_1_34 = true
@@ -435,7 +438,7 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 
 			local var_1_35 = false
 
-			for iter_1_33, iter_1_34 in ipairs(var_1_8.available_items.perks.groups) do
+			for iter_1_33, iter_1_34 in ipairs(loadout_menu.available_items.perks.groups) do
 				for iter_1_35, iter_1_36 in ipairs(iter_1_34.items) do
 					if iter_1_28.perk == iter_1_36.name then
 						var_1_35 = true
@@ -457,7 +460,7 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 				if array.find(LoadoutSettings.static_stratagems, iter_1_38) then
 					var_1_37 = true
 				else
-					for iter_1_39, iter_1_40 in ipairs(var_1_8.available_items.stratagems.groups) do
+					for iter_1_39, iter_1_40 in ipairs(loadout_menu.available_items.stratagems.groups) do
 						for iter_1_41, iter_1_42 in ipairs(iter_1_40.items) do
 							if iter_1_38 == iter_1_42.name then
 								var_1_37 = true
@@ -480,12 +483,12 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 			end
 
 			if not var_1_34 or not var_1_35 or not var_1_36 then
-				var_1_29[iter_1_27] = table.clone(LoadoutSettings.default_loadout)
+				loadouts[iter_1_27] = table.clone(LoadoutSettings.default_loadout)
 			end
 		end
 	end
 
-	for iter_1_43, iter_1_44 in ipairs(var_1_29) do
+	for iter_1_43, iter_1_44 in ipairs(loadouts) do
 		for iter_1_45, iter_1_46 in ipairs(LoadoutSettings.static_stratagems) do
 			local var_1_38 = false
 
@@ -507,10 +510,10 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 		end
 	end
 
-	local var_1_39 = table.clone(var_1_29[1])
+	local var_1_39 = table.clone(loadouts[1])
 
-	if arg_1_0.is_proving_ground_trial then
-		var_1_39 = arg_1_0.proving_grounds_loadout
+	if menu_instance.is_proving_ground_trial then
+		var_1_39 = menu_instance.proving_grounds_loadout
 	end
 
 	local var_1_40 = table.clone(LoadoutSettings.get_item("primary_weapon", var_1_39.primary_weapon))
@@ -521,7 +524,7 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 		var_1_40 = table.clone(LoadoutSettings.get_item("primary_weapon", var_1_41))
 	end
 
-	var_1_8.loadout_menu = {
+	loadout_menu.loadout_menu = {
 		{
 			type = "perks",
 			item = table.clone(LoadoutSettings.get_item("perks", var_1_39.perk)),
@@ -534,7 +537,7 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 
 	for iter_1_49 = #LoadoutSettings.static_stratagems + 1, LoadoutSettings.nr_of_stratagem_slots do
 		if var_1_39.stratagems then
-			array.insert_end(var_1_8.loadout_menu, {
+			array.insert_end(loadout_menu.loadout_menu, {
 				type = "stratagems",
 				id = iter_1_49,
 				item = table.clone(LoadoutSettings.get_item("stratagems", var_1_39.stratagems[iter_1_49])),
@@ -544,25 +547,25 @@ function MenuScreenLoadout.setup_loadout(arg_1_0, arg_1_1)
 		end
 	end
 
-	array.insert_end(var_1_8.loadout_menu, {
+	array.insert_end(loadout_menu.loadout_menu, {
 		type = "button",
 		up_index = var_0_7 + 1,
 	})
 
-	var_1_8.enabled = true
-	var_1_8.current_selection_index = 1
-	var_1_8.selected_loadout_slot = 1
-	var_1_8.confirm_loadout_blink = 0
-	var_1_8.confirm_selection_blink = 0
-	var_1_8.scroll_index_mouse = 1
-	var_1_8.random_loadout = false
-	var_1_8.cursor_selection_direction = nil
+	loadout_menu.enabled = true
+	loadout_menu.current_selection_index = 1
+	loadout_menu.selected_loadout_slot = 1
+	loadout_menu.confirm_loadout_blink = 0
+	loadout_menu.confirm_selection_blink = 0
+	loadout_menu.scroll_index_mouse = 1
+	loadout_menu.random_loadout = false
+	loadout_menu.cursor_selection_direction = nil
 
-	if arg_1_0.is_proving_ground_trial then
-		var_1_8.current_selection_index = #var_1_8.loadout_menu
+	if menu_instance.is_proving_ground_trial then
+		loadout_menu.current_selection_index = #loadout_menu.loadout_menu
 	end
 
-	arg_1_0.option_menus[arg_1_1] = var_1_8
+	menu_instance.option_menus[player_id] = loadout_menu
 end
 
 function MenuScreenLoadout.update_selected_option_cursor(arg_1_0)
